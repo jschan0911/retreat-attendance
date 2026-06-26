@@ -1,7 +1,5 @@
 (function () {
   const scriptUrl = window.APP_CONFIG && window.APP_CONFIG.SCRIPT_URL;
-  const keyForm = document.querySelector("#adminKeyForm");
-  const keyInput = document.querySelector("#adminKey");
   const message = document.querySelector("#adminMessage");
   const rowsEl = document.querySelector("#responseRows");
   const rowTemplate = document.querySelector("#rowTemplate");
@@ -14,8 +12,6 @@
     message.className = "form-message";
     if (type) message.classList.add(`is-${type}`);
   };
-
-  const getAdminKey = () => keyInput.value.trim() || sessionStorage.getItem("retreatAdminKey") || "";
 
   const requestJsonp = (payload) => {
     if (!scriptUrl) return Promise.reject(new Error("Apps Script URL이 설정되지 않았습니다."));
@@ -42,7 +38,7 @@
 
       const url = new URL(scriptUrl);
       url.searchParams.set("callback", callbackName);
-      url.searchParams.set("payload", JSON.stringify({ ...payload, adminKey: getAdminKey() }));
+      url.searchParams.set("payload", JSON.stringify(payload));
       script.onerror = () => {
         cleanup();
         reject(new Error("Apps Script에 연결할 수 없습니다."));
@@ -56,7 +52,6 @@
     setMessage("목록을 불러오는 중입니다...", "");
     const data = await requestJsonp({ action: "list" });
     rows = data.rows || [];
-    sessionStorage.setItem("retreatAdminKey", getAdminKey());
     renderRows();
     setMessage(`${rows.length}명을 불러왔습니다.`, "success");
   };
@@ -172,15 +167,6 @@
     }
   });
 
-  keyForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    try {
-      await loadRows();
-    } catch (error) {
-      setMessage(error.message, "error");
-    }
-  });
-
   refreshButton.addEventListener("click", async () => {
     try {
       await loadRows();
@@ -191,6 +177,7 @@
 
   searchInput.addEventListener("input", renderRows);
 
-  const savedKey = sessionStorage.getItem("retreatAdminKey");
-  if (savedKey) keyInput.value = savedKey;
+  loadRows().catch((error) => {
+    setMessage(error.message, "error");
+  });
 })();

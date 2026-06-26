@@ -126,8 +126,6 @@ function appendResponse_(payload) {
 }
 
 function handleAdminAction_(payload) {
-  assertAdmin_(payload.adminKey);
-
   if (payload.action === 'list') {
     return { ok: true, rows: listResponses_() };
   }
@@ -239,12 +237,6 @@ function validatePayload_(payload) {
 
 function buildJoinLabel_(payload) {
   return [payload.joinDate, payload.joinPeriod, payload.joinNote].filter(Boolean).join(' / ');
-}
-
-function assertAdmin_(adminKey) {
-  const savedKey = PropertiesService.getScriptProperties().getProperty('ADMIN_KEY');
-  if (!savedKey) throw new Error('ADMIN_KEY가 설정되어 있지 않습니다.');
-  if (adminKey !== savedKey) throw new Error('관리자 키가 올바르지 않습니다.');
 }
 
 function parsePayload_(event) {
