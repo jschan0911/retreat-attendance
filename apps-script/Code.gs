@@ -37,7 +37,7 @@ const STATUSES = ['접수', '확인', '취소'];
 function doGet(event) {
   try {
     const payload = parseQueryPayload_(event);
-    const result = handleAdminAction_(payload);
+    const result = handleAction_(payload);
     return jsonp_(result, event);
   } catch (error) {
     return jsonp_({ ok: false, message: error.message }, event);
@@ -47,12 +47,7 @@ function doGet(event) {
 function doPost(event) {
   try {
     const payload = parsePayload_(event);
-    if (payload.action !== 'create') {
-      throw new Error('지원하지 않는 작업입니다.');
-    }
-
-    const row = appendResponse_(payload);
-    return json_({ ok: true, row });
+    return json_(handleAction_(payload));
   } catch (error) {
     return json_({ ok: false, message: error.message });
   }
@@ -125,7 +120,10 @@ function appendResponse_(payload) {
   return sheet.getLastRow();
 }
 
-function handleAdminAction_(payload) {
+function handleAction_(payload) {
+  if (payload.action === 'create') {
+    return { ok: true, row: appendResponse_(payload), rows: listResponses_() };
+  }
   if (payload.action === 'list') {
     return { ok: true, rows: listResponses_() };
   }
@@ -245,8 +243,9 @@ function parsePayload_(event) {
 }
 
 function parseQueryPayload_(event) {
-  if (!event || !event.parameter || !event.parameter.payload) return {};
-  return JSON.parse(event.parameter.payload);
+  if (!event || !event.parameter) return {};
+  if (event.parameter.payload) return JSON.parse(event.parameter.payload);
+  return event.parameter;
 }
 
 function getOrCreateSheet_(ss, name) {
