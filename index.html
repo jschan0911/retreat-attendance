@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>수련회 참석 조사</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="intro-panel" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">청년부 수련회</p>
+          <h1 id="page-title">참석 여부 조사</h1>
+          <p class="intro-copy">
+            은정교회, 은현교회, 의정부 좋은나무교회 청년들의 참석 현황을 모읍니다.
+          </p>
+        </div>
+        <div class="quick-stats" aria-label="입력 항목 요약">
+          <span>필수: 이름, 성별, 참석여부</span>
+          <span>선택: 출생연도</span>
+        </div>
+      </section>
+
+      <section class="form-panel" aria-label="참석 조사 입력">
+        <form id="surveyForm" novalidate>
+          <div class="field-grid">
+            <label class="field" for="church">
+              <span>소속 교회</span>
+              <select id="church" name="church" required>
+                <option value="">선택해주세요</option>
+                <option value="은정교회">은정교회</option>
+                <option value="은현교회">은현교회</option>
+                <option value="의정부 좋은나무교회">의정부 좋은나무교회</option>
+              </select>
+            </label>
+
+            <label class="field" for="name">
+              <span>이름</span>
+              <input id="name" name="name" type="text" autocomplete="name" placeholder="홍길동" required />
+            </label>
+
+            <fieldset class="field radio-field">
+              <legend>성별</legend>
+              <div class="segmented">
+                <label><input type="radio" name="gender" value="남" required /> 남</label>
+                <label><input type="radio" name="gender" value="여" required /> 여</label>
+              </div>
+            </fieldset>
+
+            <label class="field" for="birthYear">
+              <span>출생연도 <em>선택</em></span>
+              <input id="birthYear" name="birthYear" type="number" inputmode="numeric" min="1970" placeholder="예: 1998" />
+            </label>
+          </div>
+
+          <fieldset class="field attendance-field">
+            <legend>참석여부</legend>
+            <div class="attendance-options">
+              <label>
+                <input type="radio" name="attendance" value="풀참" required />
+                <strong>풀참</strong>
+                <span>전체 일정 참석</span>
+              </label>
+              <label>
+                <input type="radio" name="attendance" value="부분참" required />
+                <strong>부분참</strong>
+                <span>일정 중 일부 참석</span>
+              </label>
+              <label>
+                <input type="radio" name="attendance" value="미정" required />
+                <strong>미정</strong>
+                <span>참석 가능성 확인 중</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <section id="joinSection" class="join-section" aria-label="합류 시점" hidden>
+            <div class="section-heading">
+              <h2>합류 시점</h2>
+              <p>부분참 또는 미정인 경우 현재 예상되는 합류 시점을 남겨주세요.</p>
+            </div>
+            <div class="field-grid">
+              <label class="field" for="joinDate">
+                <span>합류일</span>
+                <input id="joinDate" name="joinDate" type="date" />
+              </label>
+
+              <label class="field" for="joinPeriod">
+                <span>시간대</span>
+                <select id="joinPeriod" name="joinPeriod">
+                  <option value="">선택해주세요</option>
+                  <option value="새벽 (00:00~06:00)">새벽 (00:00~06:00)</option>
+                  <option value="아침 (06:00~09:00)">아침 (06:00~09:00)</option>
+                  <option value="오전 (09:00~12:00)">오전 (09:00~12:00)</option>
+                  <option value="점심 (12:00~14:00)">점심 (12:00~14:00)</option>
+                  <option value="오후 (14:00~18:00)">오후 (14:00~18:00)</option>
+                  <option value="저녁 (18:00~21:00)">저녁 (18:00~21:00)</option>
+                  <option value="밤 (21:00~24:00)">밤 (21:00~24:00)</option>
+                </select>
+              </label>
+
+              <label class="field field-wide" for="joinNote">
+                <span>메모 <em>선택</em></span>
+                <input id="joinNote" name="joinNote" type="text" placeholder="예: 금요일 퇴근 후 출발 예정" />
+              </label>
+            </div>
+          </section>
+
+          <label class="field" for="note">
+            <span>비고 <em>선택</em></span>
+            <textarea id="note" name="note" rows="3" placeholder="특이사항이 있으면 적어주세요"></textarea>
+          </label>
+
+          <div class="form-actions">
+            <p id="formMessage" class="form-message" role="status"></p>
+            <button type="submit">제출하기</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="./config.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
