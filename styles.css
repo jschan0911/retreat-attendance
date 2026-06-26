@@ -324,7 +324,7 @@ button:disabled {
 
 .admin-table {
   width: 100%;
-  min-width: 1120px;
+  min-width: 1480px;
   border-collapse: collapse;
   background: #fff;
 }
@@ -363,7 +363,9 @@ button:disabled {
   font-size: 0.78rem;
 }
 
-.join-cell {
+.join-cell,
+.schedule-cell,
+.payment-cell {
   display: grid;
   min-width: 250px;
   gap: 8px;
@@ -465,7 +467,9 @@ button:disabled {
     padding: 6px 0;
   }
 
-  .join-cell {
+  .join-cell,
+  .schedule-cell,
+  .payment-cell {
     min-width: 0;
   }
 }

@@ -38,13 +38,15 @@
                 <th>출생연도</th>
                 <th>참석여부</th>
                 <th>합류 시점</th>
+                <th>퇴소 시점</th>
+                <th>납부</th>
                 <th>상태</th>
                 <th>관리</th>
               </tr>
             </thead>
             <tbody id="responseRows">
               <tr>
-                <td colspan="8" class="empty-cell">목록을 불러오는 중입니다.</td>
+                <td colspan="10" class="empty-cell">목록을 불러오는 중입니다.</td>
               </tr>
             </tbody>
           </table>
@@ -93,6 +95,38 @@
           </select>
           <input name="joinNote" aria-label="합류 메모" placeholder="합류 메모" />
           <textarea name="note" aria-label="비고" rows="2" placeholder="비고"></textarea>
+        </td>
+        <td class="schedule-cell">
+          <input name="leaveDate" type="date" aria-label="퇴소일" />
+          <select name="leavePeriod" aria-label="퇴소 시간대">
+            <option value="">시간대 없음</option>
+            <option value="새벽 (00:00~06:00)">새벽 (00:00~06:00)</option>
+            <option value="아침 (06:00~09:00)">아침 (06:00~09:00)</option>
+            <option value="오전 (09:00~12:00)">오전 (09:00~12:00)</option>
+            <option value="점심 (12:00~14:00)">점심 (12:00~14:00)</option>
+            <option value="오후 (14:00~18:00)">오후 (14:00~18:00)</option>
+            <option value="저녁 (18:00~21:00)">저녁 (18:00~21:00)</option>
+            <option value="밤 (21:00~24:00)">밤 (21:00~24:00)</option>
+          </select>
+          <input name="leaveNote" aria-label="퇴소 메모" placeholder="퇴소 메모" />
+        </td>
+        <td class="payment-cell">
+          <select name="paymentStatus" aria-label="납부 상태">
+            <option value="미납">미납</option>
+            <option value="완납">완납</option>
+            <option value="부분납">부분납</option>
+            <option value="면제">면제</option>
+            <option value="환불">환불</option>
+          </select>
+          <input name="paymentAmount" type="number" min="0" aria-label="납부금액" placeholder="금액" />
+          <select name="paymentMethod" aria-label="납부 방식">
+            <option value="">방식 없음</option>
+            <option value="계좌이체">계좌이체</option>
+            <option value="현금">현금</option>
+            <option value="카드">카드</option>
+            <option value="기타">기타</option>
+          </select>
+          <input name="paymentNote" aria-label="납부 메모" placeholder="납부 메모" />
         </td>
         <td>
           <select name="status" aria-label="상태" required>

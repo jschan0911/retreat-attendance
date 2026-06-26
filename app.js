@@ -22,6 +22,7 @@
     joinSection.hidden = !needsJoinInfo;
     form.elements.joinDate.required = needsJoinInfo;
     form.elements.joinPeriod.required = needsJoinInfo;
+    syncLeavePair();
   };
 
   const buildJoinLabel = (data) => {
@@ -29,12 +30,32 @@
     return pieces.join(" / ");
   };
 
+  const buildLeaveLabel = (data) => {
+    const pieces = [data.leaveDate, data.leavePeriod, data.leaveNote].filter(Boolean);
+    return pieces.join(" / ");
+  };
+
+  const syncLeavePair = () => {
+    const needsLeavePair = !joinSection.hidden && Boolean(form.elements.leaveDate.value || form.elements.leavePeriod.value);
+    form.elements.leaveDate.required = needsLeavePair;
+    form.elements.leavePeriod.required = needsLeavePair;
+  };
+
   const collectPayload = () => {
     const formData = new FormData(form);
     const payload = Object.fromEntries(formData.entries());
     payload.action = "create";
     payload.submittedAt = new Date().toISOString();
+    if (!["부분참", "미정"].includes(payload.attendance)) {
+      payload.joinDate = "";
+      payload.joinPeriod = "";
+      payload.joinNote = "";
+      payload.leaveDate = "";
+      payload.leavePeriod = "";
+      payload.leaveNote = "";
+    }
     payload.joinLabel = buildJoinLabel(payload);
+    payload.leaveLabel = buildLeaveLabel(payload);
     return payload;
   };
 

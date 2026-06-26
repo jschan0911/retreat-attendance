@@ -59,7 +59,18 @@
   const rowMatchesSearch = (row) => {
     const query = searchInput.value.trim().toLowerCase();
     if (!query) return true;
-    return [row.name, row.church, row.gender, row.attendance, row.joinLabel, row.note, row.status]
+    return [
+      row.name,
+      row.church,
+      row.gender,
+      row.attendance,
+      row.joinLabel,
+      row.leaveLabel,
+      row.paymentStatus,
+      row.paymentMethod,
+      row.note,
+      row.status,
+    ]
       .join(" ")
       .toLowerCase()
       .includes(query);
@@ -71,7 +82,7 @@
 
     if (!visibleRows.length) {
       const row = document.createElement("tr");
-      row.innerHTML = '<td colspan="8" class="empty-cell">표시할 응답이 없습니다.</td>';
+      row.innerHTML = '<td colspan="10" class="empty-cell">표시할 응답이 없습니다.</td>';
       rowsEl.appendChild(row);
       return;
     }
@@ -94,10 +105,18 @@
     row.querySelector('[name="joinDate"]').value = data.joinDate || "";
     row.querySelector('[name="joinPeriod"]').value = data.joinPeriod || "";
     row.querySelector('[name="joinNote"]').value = data.joinNote || "";
+    row.querySelector('[name="leaveDate"]').value = data.leaveDate || "";
+    row.querySelector('[name="leavePeriod"]').value = data.leavePeriod || "";
+    row.querySelector('[name="leaveNote"]').value = data.leaveNote || "";
+    row.querySelector('[name="paymentStatus"]').value = data.paymentStatus || "미납";
+    row.querySelector('[name="paymentAmount"]').value = data.paymentAmount || "";
+    row.querySelector('[name="paymentMethod"]').value = data.paymentMethod || "";
+    row.querySelector('[name="paymentNote"]').value = data.paymentNote || "";
     row.querySelector('[name="note"]').value = data.note || "";
     row.querySelector('[name="status"]').value = data.status || "접수";
     row.querySelector('[data-field="submittedAt"]').textContent = data.submittedAt ? `제출 ${data.submittedAt}` : "";
     syncJoinRequired(row);
+    syncLeavePair(row);
   };
 
   const syncJoinRequired = (row) => {
@@ -105,6 +124,14 @@
     const needsJoinInfo = ["부분참", "미정"].includes(attendance);
     row.querySelector('[name="joinDate"]').required = needsJoinInfo;
     row.querySelector('[name="joinPeriod"]').required = needsJoinInfo;
+  };
+
+  const syncLeavePair = (row) => {
+    const leaveDate = row.querySelector('[name="leaveDate"]');
+    const leavePeriod = row.querySelector('[name="leavePeriod"]');
+    const needsLeavePair = Boolean(leaveDate.value || leavePeriod.value);
+    leaveDate.required = needsLeavePair;
+    leavePeriod.required = needsLeavePair;
   };
 
   const collectRowPayload = (row) => ({
@@ -118,8 +145,15 @@
     joinDate: row.querySelector('[name="joinDate"]').value,
     joinPeriod: row.querySelector('[name="joinPeriod"]').value,
     joinNote: row.querySelector('[name="joinNote"]').value,
+    leaveDate: row.querySelector('[name="leaveDate"]').value,
+    leavePeriod: row.querySelector('[name="leavePeriod"]').value,
+    leaveNote: row.querySelector('[name="leaveNote"]').value,
     note: row.querySelector('[name="note"]').value,
     status: row.querySelector('[name="status"]').value,
+    paymentStatus: row.querySelector('[name="paymentStatus"]').value,
+    paymentAmount: row.querySelector('[name="paymentAmount"]').value,
+    paymentMethod: row.querySelector('[name="paymentMethod"]').value,
+    paymentNote: row.querySelector('[name="paymentNote"]').value,
   });
 
   const validateRow = (row) => {
@@ -132,6 +166,7 @@
   rowsEl.addEventListener("change", (event) => {
     const row = event.target.closest("tr");
     if (row && event.target.name === "attendance") syncJoinRequired(row);
+    if (row && ["leaveDate", "leavePeriod"].includes(event.target.name)) syncLeavePair(row);
   });
 
   rowsEl.addEventListener("click", async (event) => {

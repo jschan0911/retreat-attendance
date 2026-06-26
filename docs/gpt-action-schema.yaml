@@ -1,0 +1,99 @@
+openapi: 3.1.0
+info:
+  title: Retreat Attendance CRUD
+  version: 1.1.0
+servers:
+  - url: https://script.google.com/macros/s/AKfycbwlg6nHzl_zvSThgRa7cuQPFenf90dawm4fh8w36RrePM2CyGmLZj-LXW6Fq_ZVHAfyyw
+paths:
+  /exec:
+    get:
+      operationId: listResponses
+      summary: Read retreat attendance responses
+      parameters:
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [list]
+      responses:
+        "200":
+          description: List of attendance responses
+    post:
+      operationId: manageResponse
+      summary: Create, update, or delete an attendance response
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - action
+              properties:
+                action:
+                  type: string
+                  enum: [create, update, delete]
+                id:
+                  type: string
+                church:
+                  type: string
+                  enum: [은정교회, 은현교회, 의정부 좋은나무교회]
+                name:
+                  type: string
+                gender:
+                  type: string
+                  enum: [남, 여]
+                birthYear:
+                  type: string
+                attendance:
+                  type: string
+                  enum: [풀참, 부분참, 미정]
+                joinDate:
+                  type: string
+                  description: YYYY-MM-DD
+                joinPeriod:
+                  type: string
+                  enum:
+                    - 새벽 (00:00~06:00)
+                    - 아침 (06:00~09:00)
+                    - 오전 (09:00~12:00)
+                    - 점심 (12:00~14:00)
+                    - 오후 (14:00~18:00)
+                    - 저녁 (18:00~21:00)
+                    - 밤 (21:00~24:00)
+                joinNote:
+                  type: string
+                leaveDate:
+                  type: string
+                  description: YYYY-MM-DD
+                leavePeriod:
+                  type: string
+                  enum:
+                    - 새벽 (00:00~06:00)
+                    - 아침 (06:00~09:00)
+                    - 오전 (09:00~12:00)
+                    - 점심 (12:00~14:00)
+                    - 오후 (14:00~18:00)
+                    - 저녁 (18:00~21:00)
+                    - 밤 (21:00~24:00)
+                leaveNote:
+                  type: string
+                note:
+                  type: string
+                status:
+                  type: string
+                  enum: [접수, 확인, 취소]
+                paymentStatus:
+                  type: string
+                  enum: [미납, 완납, 부분납, 면제, 환불]
+                paymentAmount:
+                  type: string
+                paymentMethod:
+                  type: string
+                  enum: ["", 계좌이체, 현금, 카드, 기타]
+                paymentNote:
+                  type: string
+      responses:
+        "200":
+          description: Operation result

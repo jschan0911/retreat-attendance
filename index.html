@@ -78,7 +78,7 @@
           <section id="joinSection" class="join-section" aria-label="합류 시점" hidden>
             <div class="section-heading">
               <h2>합류 시점</h2>
-              <p>부분참 또는 미정인 경우 현재 예상되는 합류 시점을 남겨주세요.</p>
+              <p>부분참 또는 미정인 경우 현재 예상되는 합류 시점과 퇴소 예정 시점을 남겨주세요.</p>
             </div>
             <div class="field-grid">
               <label class="field" for="joinDate">
@@ -103,6 +103,30 @@
               <label class="field field-wide" for="joinNote">
                 <span>메모 <em>선택</em></span>
                 <input id="joinNote" name="joinNote" type="text" placeholder="예: 금요일 퇴근 후 출발 예정" />
+              </label>
+
+              <label class="field" for="leaveDate">
+                <span>퇴소 예정일 <em>선택</em></span>
+                <input id="leaveDate" name="leaveDate" type="date" />
+              </label>
+
+              <label class="field" for="leavePeriod">
+                <span>퇴소 시간대 <em>선택</em></span>
+                <select id="leavePeriod" name="leavePeriod">
+                  <option value="">선택해주세요</option>
+                  <option value="새벽 (00:00~06:00)">새벽 (00:00~06:00)</option>
+                  <option value="아침 (06:00~09:00)">아침 (06:00~09:00)</option>
+                  <option value="오전 (09:00~12:00)">오전 (09:00~12:00)</option>
+                  <option value="점심 (12:00~14:00)">점심 (12:00~14:00)</option>
+                  <option value="오후 (14:00~18:00)">오후 (14:00~18:00)</option>
+                  <option value="저녁 (18:00~21:00)">저녁 (18:00~21:00)</option>
+                  <option value="밤 (21:00~24:00)">밤 (21:00~24:00)</option>
+                </select>
+              </label>
+
+              <label class="field field-wide" for="leaveNote">
+                <span>퇴소 메모 <em>선택</em></span>
+                <input id="leaveNote" name="leaveNote" type="text" placeholder="예: 토요일 저녁 식사 후 귀가 예정" />
               </label>
             </div>
           </section>

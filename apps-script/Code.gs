@@ -18,6 +18,14 @@ const HEADERS = [
   '합류표시',
   '비고',
   '상태',
+  '퇴소일',
+  '퇴소시간대',
+  '퇴소메모',
+  '퇴소표시',
+  '납부상태',
+  '납부금액',
+  '납부방식',
+  '납부메모',
 ];
 
 const CHURCHES = ['은정교회', '은현교회', '의정부 좋은나무교회'];
@@ -33,6 +41,8 @@ const JOIN_PERIODS = [
   '밤 (21:00~24:00)',
 ];
 const STATUSES = ['접수', '확인', '취소'];
+const PAYMENT_STATUSES = ['미납', '완납', '부분납', '면제', '환불'];
+const PAYMENT_METHODS = ['', '계좌이체', '현금', '카드', '기타'];
 
 function doGet(event) {
   try {
@@ -59,7 +69,7 @@ function setupWorkbook() {
   responses.clear();
   responses.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
   responses.setFrozenRows(1);
-  responses.getRange('A1:N1').setFontWeight('bold').setBackground('#e7f4f2');
+  responses.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold').setBackground('#e7f4f2');
   responses.getRange('B:C').setNumberFormat('yyyy-mm-dd hh:mm');
   responses.getRange('I:I').setNumberFormat('yyyy-mm-dd');
   responses.autoResizeColumns(1, HEADERS.length);
@@ -88,6 +98,18 @@ function setupWorkbook() {
   summary.autoResizeColumns(1, 4);
 }
 
+function migrateWorkbookSchema() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const responses = getOrCreateSheet_(ss, SHEET_NAMES.responses);
+  responses.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+  responses.setFrozenRows(1);
+  responses.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold').setBackground('#e7f4f2');
+  responses.getRange('B:C').setNumberFormat('yyyy-mm-dd hh:mm');
+  responses.getRange('I:I').setNumberFormat('yyyy-mm-dd');
+  responses.getRange('O:O').setNumberFormat('yyyy-mm-dd');
+  responses.autoResizeColumns(1, HEADERS.length);
+}
+
 function appendResponse_(payload) {
   validatePayload_(payload);
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -114,6 +136,14 @@ function appendResponse_(payload) {
     clean_(payload.joinLabel),
     clean_(payload.note),
     '접수',
+    clean_(payload.leaveDate),
+    clean_(payload.leavePeriod),
+    clean_(payload.leaveNote),
+    buildLeaveLabel_(payload),
+    payload.paymentStatus || '미납',
+    clean_(payload.paymentAmount),
+    clean_(payload.paymentMethod),
+    clean_(payload.paymentNote),
   ];
 
   sheet.appendRow(row);
@@ -162,12 +192,21 @@ function listResponses_() {
       joinLabel: row[11],
       note: row[12],
       status: row[13],
+      leaveDate: formatDate_(row[14]),
+      leavePeriod: row[15],
+      leaveNote: row[16],
+      leaveLabel: row[17],
+      paymentStatus: row[18] || '미납',
+      paymentAmount: row[19],
+      paymentMethod: row[20],
+      paymentNote: row[21],
     }));
 }
 
 function updateResponse_(payload) {
   validatePayload_(payload);
   if (!STATUSES.includes(payload.status)) throw new Error('상태를 확인해주세요.');
+  validatePayment_(payload);
 
   const sheet = getOrCreateSheet_(SpreadsheetApp.getActiveSpreadsheet(), SHEET_NAMES.responses);
   const rowNumber = findRowById_(sheet, payload.id);
@@ -187,6 +226,14 @@ function updateResponse_(payload) {
     buildJoinLabel_(payload),
     clean_(payload.note),
     payload.status,
+    clean_(payload.leaveDate),
+    clean_(payload.leavePeriod),
+    clean_(payload.leaveNote),
+    buildLeaveLabel_(payload),
+    payload.paymentStatus || '미납',
+    clean_(payload.paymentAmount),
+    clean_(payload.paymentMethod),
+    clean_(payload.paymentNote),
   ];
 
   sheet.getRange(rowNumber, 1, 1, HEADERS.length).setValues([row]);
@@ -231,10 +278,38 @@ function validatePayload_(payload) {
       throw new Error('합류 시간대를 확인해주세요.');
     }
   }
+
+  if (payload.leaveDate || payload.leavePeriod) {
+    if (!payload.leaveDate || !payload.leavePeriod) {
+      throw new Error('퇴소일과 퇴소 시간대를 함께 입력해주세요.');
+    }
+    if (!JOIN_PERIODS.includes(payload.leavePeriod)) {
+      throw new Error('퇴소 시간대를 확인해주세요.');
+    }
+  }
+
+  validatePayment_(payload);
 }
 
 function buildJoinLabel_(payload) {
   return [payload.joinDate, payload.joinPeriod, payload.joinNote].filter(Boolean).join(' / ');
+}
+
+function buildLeaveLabel_(payload) {
+  return [payload.leaveDate, payload.leavePeriod, payload.leaveNote].filter(Boolean).join(' / ');
+}
+
+function validatePayment_(payload) {
+  if (!PAYMENT_STATUSES.includes(payload.paymentStatus || '미납')) {
+    throw new Error('납부 상태를 확인해주세요.');
+  }
+  if (!PAYMENT_METHODS.includes(payload.paymentMethod || '')) {
+    throw new Error('납부 방식을 확인해주세요.');
+  }
+  if (payload.paymentAmount) {
+    const amount = Number(payload.paymentAmount);
+    if (!Number.isFinite(amount) || amount < 0) throw new Error('납부금액을 확인해주세요.');
+  }
 }
 
 function parsePayload_(event) {
