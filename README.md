@@ -33,6 +33,7 @@ GitHub Pages에 올릴 수 있는 정적 참석 조사 페이지와 Google Apps 
 `index.html`, `styles.css`, `app.js`, `config.js`를 저장소 루트에 둔 상태로 GitHub Pages를 켜면 됩니다.
 
 운영 페이지는 `admin.html`입니다. 임시 내부용 페이지라 링크를 아는 사람이 전체 응답을 조회, 수정, 삭제할 수 있습니다.
+개인정보 처리방침 URL은 `privacy.html`입니다.
 
 ## GPT Actions
 
