@@ -289,6 +289,111 @@ button:disabled {
   opacity: 0.65;
 }
 
+.text-link {
+  color: var(--brand-dark);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+
+.admin-shell {
+  width: min(1280px, calc(100% - 32px));
+}
+
+.admin-panel {
+  display: grid;
+  gap: 20px;
+}
+
+.admin-key-form,
+.admin-toolbar {
+  display: grid;
+  align-items: end;
+  grid-template-columns: minmax(220px, 360px) auto;
+  gap: 12px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.admin-table {
+  width: 100%;
+  min-width: 1120px;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.admin-table th,
+.admin-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.admin-table th {
+  background: #eef5f4;
+  color: #344054;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-table input,
+.admin-table select,
+.admin-table textarea {
+  min-height: 40px;
+  padding: 8px 10px;
+  font-size: 0.92rem;
+}
+
+.admin-table small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.join-cell {
+  display: grid;
+  min-width: 250px;
+  gap: 8px;
+}
+
+.row-actions {
+  min-width: 160px;
+}
+
+.row-actions button {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  margin-bottom: 8px;
+}
+
+.danger-button {
+  background: var(--accent);
+}
+
+.danger-button:hover {
+  background: #982f4b;
+}
+
+.empty-cell {
+  color: var(--muted);
+  font-weight: 700;
+  text-align: center;
+}
+
 @media (max-width: 720px) {
   .page-shell {
     width: min(100% - 24px, 960px);
@@ -320,5 +425,47 @@ button:disabled {
 
   button {
     width: 100%;
+  }
+
+  .admin-key-form,
+  .admin-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .table-wrap {
+    border: 0;
+    overflow: visible;
+  }
+
+  .admin-table,
+  .admin-table thead,
+  .admin-table tbody,
+  .admin-table tr,
+  .admin-table th,
+  .admin-table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .admin-table thead {
+    display: none;
+  }
+
+  .admin-table tr {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    margin-bottom: 12px;
+    padding: 10px;
+  }
+
+  .admin-table td {
+    border-bottom: 0;
+    padding: 6px 0;
+  }
+
+  .join-cell {
+    min-width: 0;
   }
 }
